@@ -88,9 +88,12 @@ if 'current_question' not in st.session_state:
 # Hàm hiển thị câu hỏi và các lựa chọn
 def display_question(q):
     st.markdown(f"**{q['question']}**")
-    # Dùng giá trị index hợp lệ (trong trường hợp này là -1 để không chọn mặc định)
-    selected_option = st.radio(f"Option {idx + 1}", options=q['options'], key=f"q{st.session_state['current_question']}_option{idx}")
-    st.session_state['answers'].append(selected_option)
+    # Duyệt qua các câu trả lời
+    for idx, option in enumerate(q['options']):
+        selected_option = st.radio(f"Option {idx + 1}", options=q['options'], key=f"q{st.session_state['current_question']}_option{idx}")
+        # Lưu lại câu trả lời của người dùng
+        st.session_state['answers'].append(selected_option)
+
 
 # --- Logic Quiz ---
 if st.button('Start Quiz'):
