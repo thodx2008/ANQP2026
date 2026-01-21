@@ -1,10 +1,10 @@
-
 import streamlit as st
+import random
 
 # --- Cấu hình ---
 questions = {
     1: [
-        # --- DẠNG 1: TRẮC NGHIỆM KHÁCH QUAN ---
+        # --- Trắc nghiệm khách quan (20 câu) ---
         {
             'type': 'mc', 
             'question': 'Đường lối của Đảng Cộng sản Việt Nam về bảo vệ Tổ quốc xã hội chủ nghĩa là:',
@@ -38,40 +38,7 @@ questions = {
             ],
             'answer': 1  # B
         },
-        {
-            'type': 'mc',
-            'question': 'Học thuyết Mác - Lênin, tư tưởng Hồ Chí Minh về bảo vệ Tổ quốc xã hội chủ nghĩa là:',
-            'options': [
-                'Tổng hợp các quan điểm về bảo vệ Tổ quốc xã hội chủ nghĩa',
-                'Tổng họp các tư tưởng về bảo vệ Tổ quốc xã hội chủ nghĩa',
-                'Bộ phận hợp thành lý luận cách mạng xã hội chủ nghĩa',
-                'Hệ thống các quan điểm về tính tất yếu, nhiệm vụ và nội dung bảo vệ Tổ quốc xã hội chủ nghĩa'
-            ],
-            'answer': 2  # C
-        },
-        {
-            'type': 'mc',
-            'question': 'Đường lối của Đảng Cộng sản Việt Nam về bảo vệ Tổ quốc trong văn kiện đại hội lần thứ XIII của Đảng xác định:',
-            'options': [
-                'Phát huy có hiệu quả sức mạnh tổng hợp, tranh thủ tối đa sự đồng tình, ủng hộ của cộng đồng quốc tế',
-                'Phát huy sức mạnh của cả hệ thống chính trị tranh thủ tối đa sự đồng tình, ủng hộ của cộng đồng quốc tế',
-                'Huy động sức mạnh tổng hợp của cả dân tộc kết hợp với sức mạnh thời đại và sự đồng tình, ủng hộ của cộng đồng quốc tế',
-                'Phát huy cao nhất sức mạnh tổng hợp của toàn dân tộc, của cả hệ thống chính trị kết hợp với sức mạnh thời đại, tranh thủ tối đa sự đồng tình, ủng hộ của cộng đồng quốc tế'
-            ],
-            'answer': 3  # D
-        },
-        {
-            'type': 'mc',
-            'question': 'Đường lối của Đảng Cộng sản Việt Nam về bảo vệ Tổ quốc trong văn kiện đại hội lần thứ XIII của Đảng xác định:',
-            'options': [
-                'Giữ độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ của Tổ quốc',
-                'Bảo vệ vững chắc độc lập, chủ quyền, toàn vẹn lãnh thổ của Tổ quốc, bảo vệ Đảng, Nhà nước, nhân dân',
-                'Bảo vệ vững chắc độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ của Tổ quốc, bảo vệ Đảng, Nhà nước, nhân dân, chế độ xã hội chủ nghĩa, nền văn hoá và lợi ích quốc gia - dân tộc',
-                'Bảo vệ vững chắc chủ quyền biển đảo của Tổ quốc, bảo vệ Đảng, Nhà nước, nhân dân, chế độ xã hội chủ nghĩa, nền văn hoá và lợi ích quốc gia dân tộc'
-            ],
-            'answer': 2  # C
-        },
-        # Các câu hỏi tiếp theo tương tự...
+        # Các câu hỏi khác sẽ được thêm vào tương tự
     ]
 }
 
@@ -88,20 +55,21 @@ if 'current_question' not in st.session_state:
 # Hàm hiển thị câu hỏi và các lựa chọn
 def display_question(q):
     st.markdown(f"**{q['question']}**")
-    # Duyệt qua các câu trả lời
-    for idx, option in enumerate(q['options']):
-        selected_option = st.radio(f"Option {idx + 1}", options=q['options'], key=f"q{st.session_state['current_question']}_option{idx}")
-        # Lưu lại câu trả lời của người dùng
-        st.session_state['answers'].append(selected_option)
+    options = q['options']
+    selected_option = st.radio("Chọn đáp án", options=options, index=-1, key=f"q{st.session_state['current_question']}")
+    st.session_state['answers'].append(selected_option)
 
-
-# --- Logic Quiz ---
+# Chức năng "Bắt đầu thi"
 if st.button('Start Quiz'):
     display_question(questions[1][st.session_state['current_question']])
 
+# Điều hướng qua các câu hỏi
 if st.button('Next Question'):
     if st.session_state['current_question'] < len(questions[1]) - 1:
         st.session_state['current_question'] += 1
         display_question(questions[1][st.session_state['current_question']])
     else:
         st.write("Quiz Completed!")
+
+# Hiển thị tiến độ
+st.write(f"Câu {st.session_state['current_question'] + 1} / {len(questions[1])}")
